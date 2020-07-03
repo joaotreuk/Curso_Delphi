@@ -1,0 +1,51 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<BorlandProject>
+	<Transactions>
+    <Transaction>2020/06/29 10:28:45.000.646,=C:\Users\joaod\OneDrive\Documents\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
+    <Transaction>2020/06/29 11:00:24.000.789,D:\GitHub\Delphi\AppCurso\uPrincipal.dfm=C:\Users\joaod\OneDrive\Documents\Embarcadero\Studio\Projects\Unit1.dfm</Transaction>
+    <Transaction>2020/06/29 11:00:24.000.789,D:\GitHub\Delphi\AppCurso\uPrincipal.pas=C:\Users\joaod\OneDrive\Documents\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
+    <Transaction>2020/06/29 11:00:53.000.170,D:\GitHub\Delphi\AppCurso\Vendas.dproj=C:\Users\joaod\OneDrive\Documents\Embarcadero\Studio\Projects\Project1.dproj</Transaction>
+    <Transaction>2020/06/29 11:40:38.000.389,=D:\GitHub\Delphi\AppCurso\Unit1.pas</Transaction>
+    <Transaction>2020/06/29 11:42:24.000.588,D:\GitHub\Delphi\AppCurso\DataModule\uDTMConexao.pas=D:\GitHub\Delphi\AppCurso\Unit1.pas</Transaction>
+    <Transaction>2020/06/29 11:42:24.000.588,D:\GitHub\Delphi\AppCurso\DataModule\uDTMConexao.dfm=D:\GitHub\Delphi\AppCurso\Unit1.dfm</Transaction>
+    <Transaction>2020/06/29 14:33:54.000.895,=D:\GitHub\Delphi\AppCurso\Unit1.pas</Transaction>
+    <Transaction>2020/06/29 14:35:21.000.945,D:\GitHub\Delphi\AppCurso\Heranca\uTelaHeranca.dfm=D:\GitHub\Delphi\AppCurso\Unit1.dfm</Transaction>
+    <Transaction>2020/06/29 14:35:21.000.945,D:\GitHub\Delphi\AppCurso\Heranca\uTelaHeranca.pas=D:\GitHub\Delphi\AppCurso\Unit1.pas</Transaction>
+    <Transaction>2020/06/29 15:33:03.000.546,=D:\GitHub\Delphi\AppCurso\Unit1.pas</Transaction>
+    <Transaction>2020/06/29 16:41:17.000.055,=D:\GitHub\Delphi\AppCurso\Unit1.pas</Transaction>
+    <Transaction>2020/06/29 16:42:49.000.558,D:\GitHub\Delphi\AppCurso\Cadastros\uCadCategorias.dfm=D:\GitHub\Delphi\AppCurso\Unit1.dfm</Transaction>
+    <Transaction>2020/06/29 16:42:49.000.558,D:\GitHub\Delphi\AppCurso\Cadastros\uCadCategorias.pas=D:\GitHub\Delphi\AppCurso\Unit1.pas</Transaction>
+    <Transaction>2020/06/29 23:16:14.000.566,=D:\GitHub\Delphi\AppCurso\Enter.pas</Transaction>
+    <Transaction>2020/06/29 23:17:21.000.222,=D:\GitHub\Delphi\AppCurso\Terceiros\Enter.pas</Transaction>
+    <Transaction>2020/06/30 09:37:17.000.458,=D:\GitHub\Delphi\AppCurso\Unit1.pas</Transaction>
+    <Transaction>2020/06/30 09:38:05.000.186,D:\GitHub\Delphi\AppCurso\Unit1.pas=D:\GitHub\Delphi\AppCurso\Heranca\uEnum.pas</Transaction>
+    <Transaction>2020/07/01 11:19:28.000.525,=D:\GitHub\Delphi\AppCurso\Unit1.pas</Transaction>
+    <Transaction>2020/07/01 11:21:01.000.056,D:\GitHub\Delphi\AppCurso\Unit1.pas=D:\GitHub\Delphi\AppCurso\Models\Categoria.pas</Transaction>
+    <Transaction>2020/07/02 09:45:51.000.611,=D:\GitHub\Delphi\AppCurso\Unit1.pas</Transaction>
+    <Transaction>2020/07/02 09:46:41.000.767,D:\GitHub\Delphi\AppCurso\Cadastros\uCadCliente.pas=D:\GitHub\Delphi\AppCurso\Unit1.pas</Transaction>
+    <Transaction>2020/07/02 09:46:41.000.767,D:\GitHub\Delphi\AppCurso\Cadastros\uCadCliente.dfm=D:\GitHub\Delphi\AppCurso\Unit1.dfm</Transaction>
+    <Transaction>2020/07/02 10:38:36.000.810,=D:\GitHub\Delphi\AppCurso\Unit1.pas</Transaction>
+    <Transaction>2020/07/02 10:39:03.000.516,D:\GitHub\Delphi\AppCurso\Models\Cliente.pas=D:\GitHub\Delphi\AppCurso\Unit1.pas</Transaction>
+  </Transactions>
+	<ProjectSortOrder AutoSort="0" SortType="0">
+    <File Path="Cadastros"/>
+    <File Path="Cadastros\uCadCategorias.pas"/>
+    <File Path="Cadastros\uCadCategorias.dfm"/>
+    <File Path="Cadastros\uCadCliente.pas"/>
+    <File Path="Cadastros\uCadCliente.dfm"/>
+    <File Path="DataModule"/>
+    <File Path="DataModule\uDTMConexao.pas"/>
+    <File Path="DataModule\uDTMConexao.dfm"/>
+    <File Path="Heranca"/>
+    <File Path="Heranca\uTelaHeranca.pas"/>
+    <File Path="Heranca\uTelaHeranca.dfm"/>
+    <File Path="Heranca\uEnum.pas"/>
+    <File Path="Models"/>
+    <File Path="Models\Categoria.pas"/>
+    <File Path="Models\Cliente.pas"/>
+    <File Path="Terceiros"/>
+    <File Path="Terceiros\Enter.pas"/>
+    <File Path="uPrincipal.pas"/>
+    <File Path="uPrincipal.dfm"/>
+  </ProjectSortOrder>
+</BorlandProject>

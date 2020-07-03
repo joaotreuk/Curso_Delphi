@@ -1,0 +1,128 @@
+unit uCadCliente;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, uTelaHeranca, Data.DB, Cliente, uEnum,
+  ZAbstractRODataset, ZAbstractDataset, ZDataset, Vcl.Grids, Vcl.DBGrids, uDTMConexao,
+  Vcl.StdCtrls, Vcl.Mask, Vcl.ComCtrls, Vcl.DBCtrls, Vcl.ExtCtrls, RxToolEdit;
+
+type
+  TfrmCliente = class(TfrmTelaHeranca)
+    edtID: TLabeledEdit;
+    edtDescricao: TLabeledEdit;
+    edtCep: TMaskEdit;
+    lblCep: TLabel;
+    edtEndereco: TLabeledEdit;
+    edtBairro: TLabeledEdit;
+    edtCidade: TLabeledEdit;
+    edtTelefone: TMaskEdit;
+    lblTelefone: TLabel;
+    edtEmail: TLabeledEdit;
+    dteDataNasc: TDateEdit;
+    lblDataNasc: TLabel;
+    qryListagemID: TIntegerField;
+    qryListagemNome: TWideStringField;
+    qryListagemEndereco: TWideStringField;
+    qryListagemCidade: TWideStringField;
+    qryListagemBairro: TWideStringField;
+    qryListagemCEP: TWideStringField;
+    qryListagemTelefone: TWideStringField;
+    qryListagemEmail: TWideStringField;
+    qryListagemDataNascimento: TWideStringField;
+    procedure btnAlterarClick(Sender: TObject);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure FormCreate(Sender: TObject);
+    procedure btnNovoClick(Sender: TObject);
+  private
+    oCliente: TCliente;
+    function Excluir: Boolean; override;
+    function Salvar(EstadoDoCadastro:TEstadoDoCadastro): Boolean; override;
+  end;
+
+var
+  frmCliente: TfrmCliente;
+
+implementation
+
+{$R *.dfm}
+
+{ TfrmCliente }
+
+{$region 'Override'}
+
+function TfrmCliente.Excluir: Boolean;
+begin
+  if oCliente.Selecionar(qryListagem.FieldByName('ID').AsInteger) then
+    Result := oCliente.Excluir
+  else
+    Result := False;
+end;
+
+function TfrmCliente.Salvar(EstadoDoCadastro: TEstadoDoCadastro): Boolean;
+begin
+  if edtID.Text <> EmptyStr then oCliente.ID := StrToInt(edtID.Text);
+
+  oCliente.Nome := edtDescricao.Text;
+  oCliente.CEP := edtCEP.Text;
+  oCliente.Endereco := edtEndereco.Text;
+  oCliente.Bairro := edtBairro.Text;
+  oCliente.Cidade := edtCidade.Text;
+  oCliente.Telefone := edtTelefone.Text;
+  oCliente.Email := edtEmail.Text;
+  oCliente.DataNascimento := dteDataNasc.Date;
+
+  if (EstadoDoCadastro = ecInserir) then
+     Result := oCliente.Inserir
+  else
+     Result := oCliente.Atualizar;
+end;
+
+{$endregion}
+
+procedure TfrmCliente.btnAlterarClick(Sender: TObject);
+var IDSelecionado: Integer;
+begin
+  IDSelecionado := qryListagem.FieldByName('ID').AsInteger;
+
+  if oCliente.Selecionar(IDSelecionado) then
+  begin
+     edtID.Text := IntToStr(IDSelecionado);
+     edtDescricao.Text := oCliente.Nome;
+     edtCEP.Text := oCliente.CEP;
+     edtEndereco.Text := oCliente.Endereco;
+     edtBairro.Text := oCliente.Bairro;
+     edtCidade.Text := oCliente.Cidade;
+     edtTelefone.Text := oCliente.Telefone;
+     edtEmail.Text := oCliente.Email;
+     dteDataNasc.Date := oCliente.DataNascimento;
+  end
+  else
+    Abort;
+
+  inherited;
+end;
+
+procedure TfrmCliente.btnNovoClick(Sender: TObject);
+begin
+  inherited;
+  dteDataNasc.Date := Date;
+  edtDescricao.SetFocus;
+end;
+
+procedure TfrmCliente.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+  inherited;
+  if Assigned(oCliente) then FreeAndNil(oCliente);
+end;
+
+procedure TfrmCliente.FormCreate(Sender: TObject);
+begin
+  inherited;
+
+  oCliente := TCliente.Create(dtmConexao.zcConexao);
+  IndiceAtual := 'Nome';
+end;
+
+end.

@@ -1,0 +1,221 @@
+unit Cliente;
+
+interface
+
+uses
+  System.Classes, Vcl.Controls, Vcl.ExtCtrls, Vcl.Dialogs, ZAbstractConnection,
+  ZConnection, ZDataset, System.SysUtils;
+
+type
+  TCliente = class
+  private
+    ConexaoDB: TZConnection;
+    FID: Integer;
+    FNome: String;
+    FEndereco: String;
+    FCidade: String;
+    FBairro: String;
+    FEstado: String;
+    FCEP: String;
+    FTelefone: String;
+    FEmail: String;
+    FDataNascimento: TDateTime;
+  public
+    constructor Create(AConexao: TZConnection);
+    function Inserir:Boolean;
+    function Atualizar:Boolean;
+    function Excluir:Boolean;
+    function Selecionar(id: Integer):Boolean;
+  published
+    property ID: Integer read FID write FID;
+    property Nome: String read FNome write FNome;
+    property Endereco: String read FEndereco write FEndereco;
+    property Cidade: String read FCidade write FCidade;
+    property Bairro: String read FBairro write FBairro;
+    property Estado: String read FEstado write FEstado;
+    property CEP: String read FCEP write FCEP;
+    property Telefone: String read FTelefone write FTelefone;
+    property Email: String read FEmail write FEmail;
+    property DataNascimento: TDateTime read FDataNascimento write FDataNascimento;
+  end;
+
+implementation
+
+{ TCategoria }
+
+{$region 'Constructor and Destructor'}
+
+constructor TCliente.Create(aConexao: TZConnection);
+begin
+  ConexaoDB := aConexao;
+end;
+
+{$endRegion}
+
+{$region 'CRUD'}
+
+function TCliente.Excluir: Boolean;
+var query: TZQuery;
+begin
+  Result := False;
+
+  if MessageDlg(
+    'Apagar o Registro: ' + #13 + #13 +
+    'Código: ' + IntToStr(FID) + #13 +
+    'Nome: ' + FNome,
+    mtConfirmation,
+    [mbYes, mbNo],
+    0
+  ) = mrNo then Abort;
+
+  query := TZQuery.Create(nil);
+
+  try
+    query.Connection := ConexaoDB;
+    query.SQL.Clear;
+
+    query.SQL.Add('DELETE FROM Clientes WHERE ID = :ID');
+    query.ParamByName('ID').AsInteger := FID;
+
+    Try
+      ConexaoDB.StartTransaction;
+      query.ExecSQL;
+      ConexaoDB.Commit;
+
+      Result := True;
+      ShowMessage('Cliente deletado com sucesso!');
+    Except
+      ConexaoDB.Rollback;
+    End;
+  finally
+    if Assigned(query) then FreeAndNil(query);
+  end;
+end;
+
+function TCliente.Atualizar: Boolean;
+var query: TZQuery;
+begin
+  Result := False;
+  query := TZQuery.Create(nil);
+
+  try
+    query.Connection := ConexaoDB;
+    query.SQL.Clear;
+
+    query.SQL.Add(
+      'UPDATE Clientes SET Nome = :Nome, Endereco = :Endereco,' +
+      ' Cidade = :Cidade, Bairro = :Bairro, Estado = :Estado, CEP = :CEP,' +
+      ' Telefone = :Telefone, Email = :Email, DataNascimento = :DataNascimento ' +
+      'WHERE ID = :ID'
+    );
+
+    query.ParamByName('Nome').AsString := Self.FNome;
+    query.ParamByName('Endereco').AsString := Self.FEndereco;
+    query.ParamByName('Cidade').AsString := Self.FCidade;
+    query.ParamByName('Bairro').AsString := Self.FBairro;
+    query.ParamByName('Estado').AsString := Self.FEstado;
+    query.ParamByName('CEP').AsString := Self.FCEP;
+    query.ParamByName('Telefone').AsString := Self.FTelefone;
+    query.ParamByName('Email').AsString := Self.FEmail;
+    query.ParamByName('DataNascimento').AsDate := Self.FDataNascimento;
+    query.ParamByName('ID').AsInteger := Self.FID;
+
+    Try
+      ConexaoDB.StartTransaction;
+      query.ExecSQL;
+      ConexaoDB.Commit;
+
+      Result := True;
+      ShowMessage('Cliente atualizado com sucesso!');
+    Except
+      ConexaoDB.Rollback;
+    End;
+
+  finally
+    if Assigned(query) then FreeAndNil(query);
+  end;
+end;
+
+function TCliente.Inserir: Boolean;
+var query: TZQuery;
+begin
+  Result := False;
+  query := TZQuery.Create(nil);
+
+  try
+    query.Connection := ConexaoDB;
+    query.SQL.Clear;
+
+    query.SQL.Add(
+      'INSERT INTO Clientes (Nome, Endereco, Cidade, Bairro, Estado, CEP,' +
+      ' Telefone, Email, DataNascimento) ' +
+      'VALUES (:Nome, :Endereco, :Cidade, :Bairro, :Estado, :CEP, :Telefone,' +
+      ' :Email, :DataNascimento)'
+    );
+
+    query.ParamByName('Nome').AsString := Self.FNome;
+    query.ParamByName('Endereco').AsString := Self.FEndereco;
+    query.ParamByName('Cidade').AsString := Self.FCidade;
+    query.ParamByName('Bairro').AsString := Self.FBairro;
+    query.ParamByName('Estado').AsString := Self.FEstado;
+    query.ParamByName('CEP').AsString := Self.FCEP;
+    query.ParamByName('Telefone').AsString := Self.FTelefone;
+    query.ParamByName('Email').AsString := Self.FEmail;
+    query.ParamByName('DataNascimento').AsDate := Self.FDataNascimento;
+
+    Try
+      ConexaoDB.StartTransaction;
+      query.ExecSQL;
+      ConexaoDB.Commit;
+
+      Result := True;
+      ShowMessage('Cliente salvo com sucesso!');
+    Except
+      ConexaoDB.Rollback;
+    End;
+
+  finally
+    if Assigned(query) then FreeAndNil(query);
+  end;
+end;
+
+function TCliente.Selecionar(id: Integer): Boolean;
+var query: TZQuery;
+begin
+  Result := False;
+  query := TZQuery.Create(nil);
+
+  try
+    query.Connection := ConexaoDB;
+    query.SQL.Clear;
+
+    query.SQL.Add(
+      'SELECT Nome, Endereco, Cidade, Bairro, Estado, CEP, Telefone, Email, ' +
+      ' CAST(DataNascimento AS datetime) AS Data ' +
+      'FROM Clientes (NOLOCK)' +
+      'WHERE ID = :ID'
+    );
+
+    query.ParamByName('ID').AsInteger := id;
+    query.Open;
+
+    Self.FID := id;
+    Self.FNome := query.FieldByName('Nome').AsString;
+    Self.FEndereco := query.FieldByName('Endereco').AsString;
+    Self.FCidade := query.FieldByName('Cidade').AsString;
+    Self.FBairro := query.FieldByName('Bairro').AsString;
+    Self.FEstado := query.FieldByName('Estado').AsString;
+    Self.FCEP := query.FieldByName('CEP').AsString;
+    Self.FTelefone := query.FieldByName('Telefone').AsString;
+    Self.FEmail := query.FieldByName('Email').AsString;
+    Self.DataNascimento := StrToDate(query.FieldByName('Data').AsString);
+
+    Result := True
+  finally
+    if Assigned(query) then FreeAndNil(query);
+  end;
+end;
+
+{$endregion}
+
+end.

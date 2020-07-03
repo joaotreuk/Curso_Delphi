@@ -1,0 +1,180 @@
+object frmTelaHeranca: TfrmTelaHeranca
+  Left = 0
+  Top = 0
+  BorderStyle = bsDialog
+  Caption = 'Informe aqui o T'#237'tulo'
+  ClientHeight = 627
+  ClientWidth = 864
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  OldCreateOrder = False
+  Position = poScreenCenter
+  OnClose = FormClose
+  OnCreate = FormCreate
+  OnShow = FormShow
+  PixelsPerInch = 96
+  TextHeight = 13
+  object pnlRodape: TPanel
+    Left = 0
+    Top = 576
+    Width = 864
+    Height = 51
+    Align = alBottom
+    TabOrder = 0
+    ExplicitWidth = 870
+    DesignSize = (
+      864
+      51)
+    object btnNovo: TButton
+      Left = 7
+      Top = 14
+      Width = 75
+      Height = 25
+      Caption = '&Novo'
+      TabOrder = 0
+      OnClick = btnNovoClick
+    end
+    object btnAlterar: TButton
+      Left = 88
+      Top = 14
+      Width = 75
+      Height = 25
+      Caption = '&Alterar'
+      TabOrder = 1
+      OnClick = btnAlterarClick
+    end
+    object btnCancelar: TButton
+      Left = 169
+      Top = 14
+      Width = 75
+      Height = 25
+      Caption = '&Cancelar'
+      DoubleBuffered = False
+      ParentDoubleBuffered = False
+      TabOrder = 2
+      OnClick = btnCancelarClick
+    end
+    object btnSalvar: TButton
+      Left = 250
+      Top = 14
+      Width = 75
+      Height = 25
+      Caption = '&Salvar'
+      TabOrder = 3
+      OnClick = btnSalvarClick
+    end
+    object btnDeletar: TButton
+      Left = 331
+      Top = 14
+      Width = 75
+      Height = 25
+      Caption = '&Deletar'
+      TabOrder = 4
+      OnClick = btnDeletarClick
+    end
+    object btnFechar: TButton
+      Left = 784
+      Top = 14
+      Width = 75
+      Height = 25
+      Anchors = [akTop, akRight]
+      Caption = '&Fechar'
+      TabOrder = 5
+      OnClick = btnFecharClick
+    end
+    object dbnNavegador: TDBNavigator
+      Left = 412
+      Top = 14
+      Width = 224
+      Height = 25
+      DataSource = dtsListagem
+      VisibleButtons = [nbFirst, nbPrior, nbNext, nbLast]
+      TabOrder = 6
+    end
+  end
+  object pgcPrincipal: TPageControl
+    Left = 0
+    Top = 0
+    Width = 864
+    Height = 576
+    ActivePage = tabListagem
+    Align = alClient
+    TabOrder = 1
+    ExplicitWidth = 870
+    object tabListagem: TTabSheet
+      Caption = 'Listagem'
+      ImageIndex = 1
+      ExplicitWidth = 862
+      object pnlListagem: TPanel
+        Left = 0
+        Top = 0
+        Width = 856
+        Height = 73
+        Align = alTop
+        TabOrder = 0
+        ExplicitWidth = 862
+        object lblPesquisar: TLabel
+          Left = 3
+          Top = 8
+          Width = 50
+          Height = 13
+          Caption = 'Pesquisar:'
+        end
+        object btnPesquisar: TButton
+          Left = 367
+          Top = 25
+          Width = 122
+          Height = 25
+          Caption = '&Pesquisar'
+          TabOrder = 0
+        end
+      end
+      object mskPesquisar: TMaskEdit
+        Left = 3
+        Top = 27
+        Width = 358
+        Height = 21
+        TabOrder = 1
+        Text = ''
+        TextHint = 'Digite sua pesquisa...'
+        OnChange = mskPesquisarChange
+      end
+      object grdListagem: TDBGrid
+        Left = 0
+        Top = 73
+        Width = 856
+        Height = 475
+        Align = alClient
+        DataSource = dtsListagem
+        Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgAlwaysShowSelection, dgCancelOnExit, dgTitleClick, dgTitleHotTrack]
+        TabOrder = 2
+        TitleFont.Charset = DEFAULT_CHARSET
+        TitleFont.Color = clWindowText
+        TitleFont.Height = -11
+        TitleFont.Name = 'Tahoma'
+        TitleFont.Style = []
+        OnTitleClick = grdListagemTitleClick
+      end
+    end
+    object tabManutencao: TTabSheet
+      Caption = 'Manuten'#231#227'o'
+      ImageIndex = 1
+      ExplicitWidth = 862
+    end
+  end
+  object qryListagem: TZQuery
+    Connection = dtmConexao.zcConexao
+    Params = <>
+    Left = 524
+    Top = 48
+  end
+  object dtsListagem: TDataSource
+    DataSet = qryListagem
+    Left = 600
+    Top = 48
+  end
+end
