@@ -10,7 +10,9 @@ uses
   uEnum in 'Heranca\uEnum.pas',
   Categoria in 'Models\Categoria.pas',
   uCadCliente in 'Cadastros\uCadCliente.pas' {frmCliente},
-  Cliente in 'Models\Cliente.pas';
+  Cliente in 'Models\Cliente.pas',
+  uCadProduto in 'Cadastros\uCadProduto.pas' {frmCadProduto},
+  Produto in 'Models\Produto.pas';
 
 {$R *.res}
 

@@ -31,6 +31,10 @@ inherited frmCliente: TfrmCliente
     ExplicitWidth = 877
     ExplicitHeight = 395
     inherited tabListagem: TTabSheet
+      ExplicitLeft = 4
+      ExplicitTop = 24
+      ExplicitWidth = 869
+      ExplicitHeight = 367
       inherited pnlListagem: TPanel
         Width = 869
         ExplicitWidth = 869
@@ -64,8 +68,7 @@ inherited frmCliente: TfrmCliente
       end
     end
     inherited tabManutencao: TTabSheet
-      ExplicitLeft = 4
-      ExplicitTop = 24
+      ExplicitTop = 22
       ExplicitWidth = 869
       ExplicitHeight = 367
       object lblCep: TLabel

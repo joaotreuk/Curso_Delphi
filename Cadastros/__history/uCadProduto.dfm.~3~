@@ -1,0 +1,26 @@
+inherited frmCadProduto: TfrmCadProduto
+  Caption = 'Cadastro de Produtos'
+  PixelsPerInch = 96
+  TextHeight = 13
+  inherited pnlRodape: TPanel
+    inherited dbnNavegador: TDBNavigator
+      Hints.Strings = ()
+    end
+  end
+  inherited pgcPrincipal: TPageControl
+    inherited tabManutencao: TTabSheet
+      ExplicitLeft = 4
+      ExplicitTop = 24
+      ExplicitWidth = 856
+      ExplicitHeight = 548
+    end
+  end
+  inherited qryListagem: TZQuery
+    SQL.Strings = (
+      
+        'SELECT P.ID, P.Nome, P.Descricao, P.Valor, P.Quantidade, C.ID AS' +
+        ' IDCategoria, C.Descricao AS DescricaoCategoria'
+      'FROM Produtos AS P WITH (NOLOCK)'
+      'LEFT JOIN Categorias AS C WITH (NOLOCK) ON P.IDCategoria = C.ID')
+  end
+end

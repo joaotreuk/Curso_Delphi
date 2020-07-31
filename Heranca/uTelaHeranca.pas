@@ -6,7 +6,8 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Data.DB, Vcl.Grids, Vcl.DBGrids,
   Vcl.StdCtrls, Vcl.Mask, Vcl.ComCtrls, Vcl.ExtCtrls, Vcl.DBCtrls,
-  ZAbstractRODataset, ZAbstractDataset, ZDataset, uDTMConexao, uEnum;
+  ZAbstractRODataset, ZAbstractDataset, ZDataset, uDTMConexao, uEnum,
+  RxToolEdit, RxCurrEdit;
 
 type
   TfrmTelaHeranca = class(TForm)
@@ -157,7 +158,19 @@ begin
   for indice := 0 to ComponentCount - 1 do
   begin
     if Components[indice] is TLabeledEdit then
-      TLabeledEdit(Components[indice]).Text := EmptyStr;
+      TLabeledEdit(Components[indice]).Text := EmptyStr
+    else if Components[indice] is TEdit then
+      TEdit(Components[indice]).Text := ''
+    else if Components[indice] is TMemo then
+      TMemo(Components[indice]).Text := ''
+    else if Components[indice] is TDBLookupComboBox then
+      TDBLookupComboBox(Components[indice]).KeyValue := Null
+    else if Components[indice] is TCurrencyEdit then
+      TCurrencyEdit(Components[indice]).Value := 0
+    else if Components[indice] is TDateEdit then
+      TDateEdit(Components[indice]).Date := 0
+    else if Components[indice] is TMaskEdit then
+      TMaskEdit(Components[indice]).Text := '';
   end;
 end;
 
