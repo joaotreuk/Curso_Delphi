@@ -49,24 +49,40 @@ object frmPrincipal: TfrmPrincipal
       Caption = 'Movimenta'#231#245'es'
       object Vendas1: TMenuItem
         Caption = 'Vendas'
+        OnClick = Vendas1Click
       end
     end
     object Relatrios1: TMenuItem
       Caption = 'Relat'#243'rios'
+      object Categoria1: TMenuItem
+        Caption = 'Categoria'
+        OnClick = Categoria1Click
+      end
       object Clientes2: TMenuItem
         Caption = 'Clientes'
+        OnClick = Clientes2Click
+      end
+      object FichadeClientes1: TMenuItem
+        Caption = 'Ficha de Clientes'
+        OnClick = FichadeClientes1Click
       end
       object N3: TMenuItem
         Caption = '-'
       end
       object Produtos2: TMenuItem
         Caption = 'Produtos'
+        OnClick = Produtos2Click
+      end
+      object ProdutosporCategoria1: TMenuItem
+        Caption = 'Produtos por Categoria'
+        OnClick = ProdutosporCategoria1Click
       end
       object N4: TMenuItem
         Caption = '-'
       end
       object VendasporData1: TMenuItem
         Caption = 'Vendas por Data'
+        OnClick = VendasporData1Click
       end
     end
   end

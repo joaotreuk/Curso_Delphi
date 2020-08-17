@@ -1,0 +1,65 @@
+object dtmVendas: TdtmVendas
+  OldCreateOrder = False
+  Height = 256
+  Width = 531
+  object qryClientes: TZQuery
+    Connection = dtmConexao.zcConexao
+    SQL.Strings = (
+      'SELECT ID, Nome FROM Clientes WITH (NOLOCK)')
+    Params = <>
+    Left = 88
+    Top = 32
+    object qryClientesID: TIntegerField
+      DisplayLabel = 'C'#243'digo'
+      FieldName = 'ID'
+      ReadOnly = True
+    end
+    object qryClientesNome: TWideStringField
+      FieldName = 'Nome'
+      Required = True
+      Size = 60
+    end
+  end
+  object qryProdutos: TZQuery
+    Connection = dtmConexao.zcConexao
+    SQL.Strings = (
+      'SELECT ID, Nome, Valor, Quantidade FROM Produtos WITH (NOLOCK)')
+    Params = <>
+    Left = 192
+    Top = 32
+    object qryProdutosID: TIntegerField
+      DisplayLabel = 'C'#243'digo'
+      FieldName = 'ID'
+      ReadOnly = True
+    end
+    object qryProdutosNome: TWideStringField
+      FieldName = 'Nome'
+      Size = 60
+    end
+    object qryProdutosValor: TFloatField
+      FieldName = 'Valor'
+    end
+    object qryProdutosQuantidade: TFloatField
+      FieldName = 'Quantidade'
+    end
+  end
+  object ClientDataSet1: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 88
+    Top = 168
+  end
+  object dtsClientes: TDataSource
+    DataSet = qryClientes
+    Left = 88
+    Top = 104
+  end
+  object DataSource2: TDataSource
+    Left = 184
+    Top = 104
+  end
+  object DataSource3: TDataSource
+    Left = 272
+    Top = 104
+  end
+end

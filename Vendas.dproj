@@ -130,6 +130,54 @@
             <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="Models\Produto.pas"/>
+        <DCCReference Include="DataModule\uFrmAtualizaDB.pas">
+            <Form>frmAtualizaDB</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="DataModule\uDTMVendas.pas">
+            <Form>dtmVendas</Form>
+            <FormType>dfm</FormType>
+            <DesignClass>TDataModule</DesignClass>
+        </DCCReference>
+        <DCCReference Include="Processos\uProVendas.pas">
+            <Form>frmProVenda</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="Models\mVendas.pas"/>
+        <DCCReference Include="Models\mControleEstoque.pas"/>
+        <DCCReference Include="Relatorios\uRelFichaCliente.pas">
+            <Form>frmRelFichaCliente</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="Relatorios\uRelVenda.pas">
+            <Form>frmRelVenda</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="Relatorios\uRelCliente.pas">
+            <Form>frmRelCliente</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="Relatorios\uRelCategoria.pas">
+            <Form>frmRelCategoria</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="Relatorios\uRelProduto.pas">
+            <Form>frmRelProduto</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="Relatorios\uSelecionarData.pas">
+            <Form>frmSelecionarData</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="Relatorios\uRelProdutoPorCategoria.pas">
+            <Form>frmRelProdutoPorCateg</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="Relatorios\uRelVendaPorData.pas">
+            <Form>frmRelVendaPorData</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="Heranca\uFuncaoCriptografia.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>

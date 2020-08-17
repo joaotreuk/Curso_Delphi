@@ -41,6 +41,8 @@ type
     procedure mskPesquisarChange(Sender: TObject);
     procedure btnDeletarClick(Sender: TObject);
     procedure grdListagemDblClick(Sender: TObject);
+    procedure grdListagemKeyDown(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
   private
     procedure ControlarBotoes(btnNovo, btnAlterar, btnCancelar, btnSalvar, btnDeletar: TButton;
       Navegador: TDBNavigator; pgcPrincipal: TPageControl; Flag: Boolean);
@@ -55,6 +57,7 @@ type
     EstadoDoCadastro: TEstadoDoCadastro;
     function Excluir:Boolean; virtual;
     function Salvar(EstadoDoCadastro:TEstadoDoCadastro):Boolean; virtual;
+    procedure BloquearCTRL_DEL_DBGrid(var Key: Word; Shift: TShiftState);
   end;
 
 var
@@ -174,6 +177,11 @@ begin
   end;
 end;
 
+procedure TfrmTelaHeranca.BloquearCTRL_DEL_DBGrid(var Key: Word; Shift: TShiftState);
+begin
+  if (Shift = [ssCtrl]) and (Key = 46) then Key := 0;
+end;
+
 {$EndRegion}
 
 {$Region 'Métodos Virtuais'}
@@ -291,6 +299,12 @@ end;
 procedure TfrmTelaHeranca.grdListagemDblClick(Sender: TObject);
 begin
   btnAlterar.Click;
+end;
+
+procedure TfrmTelaHeranca.grdListagemKeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+  BloquearCTRL_DEL_DBGrid(Key, Shift);
 end;
 
 procedure TfrmTelaHeranca.grdListagemTitleClick(Column: TColumn);

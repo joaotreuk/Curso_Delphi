@@ -12,7 +12,21 @@ uses
   uCadCliente in 'Cadastros\uCadCliente.pas' {frmCliente},
   Cliente in 'Models\Cliente.pas',
   uCadProduto in 'Cadastros\uCadProduto.pas' {frmCadProduto},
-  Produto in 'Models\Produto.pas';
+  Produto in 'Models\Produto.pas',
+  uFrmAtualizaDB in 'DataModule\uFrmAtualizaDB.pas' {frmAtualizaDB},
+  uDTMVendas in 'DataModule\uDTMVendas.pas' {dtmVendas: TDataModule},
+  uProVendas in 'Processos\uProVendas.pas' {frmProVenda},
+  mVendas in 'Models\mVendas.pas',
+  mControleEstoque in 'Models\mControleEstoque.pas',
+  uRelFichaCliente in 'Relatorios\uRelFichaCliente.pas' {frmRelFichaCliente},
+  uRelVenda in 'Relatorios\uRelVenda.pas' {frmRelVenda},
+  uRelCliente in 'Relatorios\uRelCliente.pas' {frmRelCliente},
+  uRelCategoria in 'Relatorios\uRelCategoria.pas' {frmRelCategoria},
+  uRelProduto in 'Relatorios\uRelProduto.pas' {frmRelProduto},
+  uSelecionarData in 'Relatorios\uSelecionarData.pas' {frmSelecionarData},
+  uRelProdutoPorCategoria in 'Relatorios\uRelProdutoPorCategoria.pas' {frmRelProdutoPorCateg},
+  uRelVendaPorData in 'Relatorios\uRelVendaPorData.pas' {frmRelVendaPorData},
+  uFuncaoCriptografia in 'Heranca\uFuncaoCriptografia.pas';
 
 {$R *.res}
 

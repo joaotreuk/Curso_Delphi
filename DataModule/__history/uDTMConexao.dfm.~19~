@@ -1,0 +1,55 @@
+object dtmConexao: TdtmConexao
+  OldCreateOrder = False
+  Height = 255
+  Width = 470
+  object zcConexao: TZConnection
+    ControlsCodePage = cCP_UTF16
+    AutoEncodeStrings = True
+    Catalog = ''
+    HostName = 'DESKTOP-BLHGJR3'
+    Port = 1433
+    Database = 'Curso_Delphi'
+    User = 'Joao'
+    Password = '1234'
+    Protocol = 'mssql'
+    LibraryLocation = 'D:\GitHub\Delphi\Curso_Delphi\ntwdblib.dll'
+    Left = 32
+    Top = 24
+  end
+  object qryScriptCategorias: TZQuery
+    Connection = zcConexao
+    SQL.Strings = (
+      'IF OBJECT_ID('#39'Categorias'#39') IS NULL'
+      'CREATE TABLE Categorias ('
+      #9'ID int IDENTITY PRIMARY KEY,'
+      #9'Descricao varchar(50)'
+      ')')
+    Params = <>
+    Left = 40
+    Top = 88
+  end
+  object qryScriptProdutos: TZQuery
+    Connection = zcConexao
+    Params = <>
+    Left = 144
+    Top = 88
+  end
+  object qryScriptClientes: TZQuery
+    Connection = zcConexao
+    Params = <>
+    Left = 248
+    Top = 88
+  end
+  object qryScriptVendas: TZQuery
+    Connection = zcConexao
+    Params = <>
+    Left = 352
+    Top = 88
+  end
+  object qryScriptItensVenda: TZQuery
+    Connection = zcConexao
+    Params = <>
+    Left = 40
+    Top = 160
+  end
+end

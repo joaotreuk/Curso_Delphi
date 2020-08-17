@@ -1,0 +1,288 @@
+unit uProVendas;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, uTelaHeranca, Data.DB, uEnum, mVendas,
+  ZAbstractRODataset, ZAbstractDataset, ZDataset, Vcl.Grids, Vcl.DBGrids,
+  Vcl.StdCtrls, Vcl.Mask, Vcl.ComCtrls, Vcl.DBCtrls, Vcl.ExtCtrls, uDTMConexao, uDTMVendas,
+  RxToolEdit, RxCurrEdit, uRelVenda;
+
+type
+  TfrmProVenda = class(TfrmTelaHeranca)
+    qryListagemID: TIntegerField;
+    qryListagemID_1: TIntegerField;
+    qryListagemNome: TWideStringField;
+    qryListagemDataVenda: TDateTimeField;
+    qryListagemTotalVenda: TFloatField;
+    edtID: TLabeledEdit;
+    lcbCliente: TDBLookupComboBox;
+    lblCliente: TLabel;
+    dteDataVenda: TDateEdit;
+    lblData: TLabel;
+    Panel1: TPanel;
+    Panel2: TPanel;
+    Panel3: TPanel;
+    Panel4: TPanel;
+    cueTotalVenda: TCurrencyEdit;
+    lblValor: TLabel;
+    grdItens: TDBGrid;
+    lblProduto: TLabel;
+    cueValorUnit: TCurrencyEdit;
+    lblValorUnit: TLabel;
+    cueQuantidade: TCurrencyEdit;
+    cueTotalProd: TCurrencyEdit;
+    lblQuantidade: TLabel;
+    lblTotalProd: TLabel;
+    btnAdicionarItem: TButton;
+    btnExcluirItem: TButton;
+    lcbProduto: TDBLookupComboBox;
+    procedure btnAlterarClick(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure grdItensKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+    procedure btnNovoClick(Sender: TObject);
+    procedure btnAdicionarItemClick(Sender: TObject);
+    procedure lcbProdutoExit(Sender: TObject);
+    procedure cueQuantidadeExit(Sender: TObject);
+    procedure cueQuantidadeEnter(Sender: TObject);
+    procedure btnExcluirItemClick(Sender: TObject);
+    procedure grdItensDblClick(Sender: TObject);
+  private
+    dtmVenda: TdtmVendas;
+    oVenda: TVenda;
+    function Excluir: Boolean; override;
+    function Salvar(EstadoDoCadastro:TEstadoDoCadastro): Boolean; override;
+    function TotalizarProduto(valorUnitario, quantidade: Double): Double;
+    procedure LimparCamposItem;
+    procedure LimparItens;
+    procedure CarregarItemSelecionado;
+    function TotalizarVenda: Double;
+  public
+    { Public declarations }
+  end;
+
+var
+  frmProVenda: TfrmProVenda;
+
+implementation
+
+{$R *.dfm}
+
+{$region 'Override'}
+
+function TfrmProVenda.Excluir: Boolean;
+begin
+  if oVenda.Selecionar(qryListagem.FieldByName('ID').AsInteger, dtmVenda.cdsItensVenda) then
+    Result := oVenda.Excluir
+  else
+    Result := False;
+end;
+
+function TfrmProVenda.Salvar(EstadoDoCadastro: TEstadoDoCadastro): Boolean;
+begin
+  if edtID.Text <> EmptyStr then oVenda.ID := StrToInt(edtID.Text);
+
+  oVenda.IDCliente := lcbCliente.KeyValue;
+  oVenda.DataVenda := dteDataVenda.Date;
+  oVenda.TotalVenda := cueTotalVenda.Value;
+
+  if (EstadoDoCadastro = ecInserir) then
+     oVenda.ID := oVenda.Inserir(dtmVenda.cdsItensVenda)
+  else
+     oVenda.Atualizar(dtmVenda.cdsItensVenda);
+
+  frmRelVenda := TfrmRelVenda.Create(Self);
+  frmRelVenda.qryVendas.Close;
+  frmRelVenda.qryVendas.ParamByName('IDVenda').AsDate := oVenda.ID;
+  frmRelVenda.qryVendas.Open;
+
+  frmRelVenda.qryVendaItens.ParamByName('IDVenda').AsDate := oVenda.ID;
+  frmRelVenda.qryVendaItens.Open;
+
+  frmRelVenda.qryVendas.Close;
+
+
+  frmRelVenda.relPrincipal.PreviewModal;
+
+  Result := True;
+end;
+
+{$endregion}
+
+procedure TfrmProVenda.btnAlterarClick(Sender: TObject);
+var IDSelecionado: Integer;
+begin
+  IDSelecionado := qryListagem.FieldByName('ID').AsInteger;
+
+  if oVenda.Selecionar(IDSelecionado, dtmVenda.cdsItensVenda) then
+  begin
+     edtID.Text := IntToStr(IDSelecionado);
+     lcbCliente.KeyValue := oVenda.IDCliente;
+     dteDataVenda.Date := oVenda.DataVenda;
+     cueTotalVenda.Value := oVenda.TotalVenda;
+  end
+  else
+    Abort;
+
+  inherited;
+end;
+
+procedure TfrmProVenda.btnExcluirItemClick(Sender: TObject);
+begin
+  inherited;
+  if lcbProduto.KeyValue = Null then begin
+    MessageDlg('Selecione o produto a ser excluído!', mtInformation, [mbOK], 0);
+    grdItens.SetFocus;
+    Abort;
+  end;
+
+  if dtmVenda.cdsItensVenda.Locate('IDProduto', lcbProduto.KeyValue, []) then begin
+    dtmVenda.cdsItensVenda.Delete;
+    cueTotalVenda.Value := TotalizarVenda;
+    LimparCamposItem;
+  end;
+end;
+
+procedure TfrmProVenda.btnNovoClick(Sender: TObject);
+begin
+  inherited;
+  LimparItens;
+  dteDataVenda.Date := Date;
+  lcbCliente.SetFocus;
+end;
+
+procedure TfrmProVenda.cueQuantidadeEnter(Sender: TObject);
+begin
+  inherited;
+  cueTotalProd.Value := TotalizarProduto(cueValorUnit.Value, cueQuantidade.Value);
+end;
+
+procedure TfrmProVenda.cueQuantidadeExit(Sender: TObject);
+begin
+  inherited;
+  cueTotalProd.Value := TotalizarProduto(cueValorUnit.Value, cueQuantidade.Value);
+end;
+
+procedure TfrmProVenda.btnAdicionarItemClick(Sender: TObject);
+begin
+  inherited;
+  if lcbProduto.KeyValue = Null then begin
+    MessageDlg('O campo produto é obrigatório!', mtInformation, [mbOK], 0);
+    lcbProduto.SetFocus;
+    Abort;
+  end;
+
+  if cueValorUnit.Value <= 0 then begin
+    MessageDlg('O campo valor unitário não pode ser menor ou igual a zero!', mtInformation, [mbOK], 0);
+    cueValorUnit.SetFocus;
+    Abort;
+  end;
+
+  if cueQuantidade.Value <= 0 then begin
+    MessageDlg('O campo quantidade não pode ser menor ou igual a zero!', mtInformation, [mbOK], 0);
+    cueQuantidade.SetFocus;
+    Abort;
+  end;
+
+  if dtmVenda.cdsItensVenda.Locate('IDProduto', lcbProduto.KeyValue, []) then begin
+    MessageDlg('Já existe um item da venda para este produto!', mtInformation, [mbOK], 0);
+    lcbProduto.SetFocus;
+    Abort;
+  end;
+
+  cueTotalProd.Value := TotalizarProduto(cueValorUnit.Value, cueQuantidade.Value);
+
+  dtmVenda.cdsItensVenda.Append;
+  dtmVenda.cdsItensVenda.FieldByName('IDProduto').AsString := lcbProduto.KeyValue;
+  dtmVenda.cdsItensVenda.FieldByName('NomeProduto').AsString := dtmVenda.qryProdutos.FieldByName('Nome').AsString;
+  dtmVenda.cdsItensVenda.FieldByName('Quantidade').AsFloat := cueQuantidade.Value;
+  dtmVenda.cdsItensVenda.FieldByName('ValorUnitario').AsFloat := cueValorUnit.Value;
+  dtmVenda.cdsItensVenda.FieldByName('ValorTotalProduto').AsFloat := cueTotalProd.Value;
+  dtmVenda.cdsItensVenda.Post;
+
+  cueTotalVenda.Value := TotalizarVenda;
+
+  LimparCamposItem;
+  lcbProduto.SetFocus;
+end;
+
+procedure TfrmProVenda.LimparCamposItem;
+begin
+  lcbProduto.KeyValue := Null;
+  cueQuantidade.Value := 0;
+  cueValorUnit.Value := 0;
+  cueTotalProd.Value := 0;
+end;
+
+function TfrmProVenda.TotalizarProduto(valorUnitario, quantidade: Double): Double;
+begin
+  Result := valorUnitario * Quantidade;
+end;
+
+procedure TfrmProVenda.LimparItens;
+begin
+  dtmVenda.cdsItensVenda.First;
+  while not dtmVenda.cdsItensVenda.Eof do dtmVenda.cdsItensVenda.Delete;
+end;
+
+procedure TfrmProVenda.grdItensDblClick(Sender: TObject);
+begin
+  inherited;
+  CarregarItemSelecionado;
+end;
+
+procedure TfrmProVenda.grdItensKeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+  inherited;
+  BloquearCTRL_DEL_DBGrid(Key, Shift);
+end;
+
+procedure TfrmProVenda.lcbProdutoExit(Sender: TObject);
+begin
+  inherited;
+
+  if TDBLookupComboBox(Sender).KeyValue <> Null then begin
+    cueValorUnit.Value := dtmVenda.qryProdutos.FieldByName('Valor').AsFloat;
+    cueQuantidade.Value := 1;
+    cueTotalProd.Value := TotalizarProduto(cueValorUnit.Value, cueQuantidade.Value);
+  end;
+end;
+
+procedure TfrmProVenda.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+  inherited;
+  if Assigned(dtmVenda) then FreeAndNil(dtmVenda);
+  if Assigned(oVenda) then FreeAndNil(oVenda);
+end;
+
+procedure TfrmProVenda.FormCreate(Sender: TObject);
+begin
+  inherited;
+  dtmVenda := TdtmVendas.Create(Self);
+  oVenda := TVenda.Create(dtmConexao.zcConexao);
+  IndiceAtual := 'ID_1';
+end;
+
+procedure TfrmProVenda.CarregarItemSelecionado;
+begin
+  lcbProduto.KeyValue := dtmVenda.cdsItensVenda.FieldByName('IDProduto').AsString;
+  cueValorUnit.Value := dtmVenda.cdsItensVenda.FieldByName('ValorUnitario').AsFloat;
+  cueQuantidade.Value := dtmVenda.cdsItensVenda.FieldByName('Quantidade').AsFloat;
+  cueTotalProd.Value := dtmVenda.cdsItensVenda.FieldByName('ValorTotalProduto').AsFloat;
+end;
+
+function TfrmProVenda.TotalizarVenda: Double;
+begin
+  Result := 0;
+
+  dtmVenda.cdsItensVenda.First;
+  while not dtmVenda.cdsItensVenda.Eof do begin
+    Result := Result + dtmVenda.cdsItensVenda.FieldByName('ValorTotalProduto').AsFloat;
+    dtmVenda.cdsItensVenda.Next;
+  end;
+end;
+
+end.
