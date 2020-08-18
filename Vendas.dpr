@@ -26,7 +26,12 @@ uses
   uSelecionarData in 'Relatorios\uSelecionarData.pas' {frmSelecionarData},
   uRelProdutoPorCategoria in 'Relatorios\uRelProdutoPorCategoria.pas' {frmRelProdutoPorCateg},
   uRelVendaPorData in 'Relatorios\uRelVendaPorData.pas' {frmRelVendaPorData},
-  uFuncaoCriptografia in 'Heranca\uFuncaoCriptografia.pas';
+  uFuncaoCriptografia in 'Heranca\uFuncaoCriptografia.pas',
+  cCadUsuario in 'Models\cCadUsuario.pas',
+  uCadUsuario in 'Cadastros\uCadUsuario.pas' {frmCadUsuario},
+  uLogin in 'uLogin.pas' {frmLogin},
+  uAlterarSenha in 'uAlterarSenha.pas' {frmAlterarSenha},
+  mUsuarioLogado in 'Models\mUsuarioLogado.pas';
 
 {$R *.res}
 

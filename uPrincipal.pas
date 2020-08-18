@@ -6,7 +6,8 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.Menus, uDTMConexao, Enter, uFrmAtualizaDB,
   uRelCategoria, uRelCliente, uRelFichaCliente, uRelProduto,
-  uRelProdutoPorCategoria, uSelecionarData, uRelVendaPorData;
+  uRelProdutoPorCategoria, uSelecionarData, uRelVendaPorData, uCadUsuario,
+  uLogin, uAlterarSenha, mUsuarioLogado, Vcl.ComCtrls;
 
 type
   TfrmPrincipal = class(TForm)
@@ -29,6 +30,10 @@ type
     Categoria1: TMenuItem;
     FichadeClientes1: TMenuItem;
     ProdutosporCategoria1: TMenuItem;
+    Usurios1: TMenuItem;
+    AlterarSenha1: TMenuItem;
+    N5: TMenuItem;
+    sbPrincipal: TStatusBar;
     procedure menuFecharClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure Categorias1Click(Sender: TObject);
@@ -42,6 +47,9 @@ type
     procedure Produtos2Click(Sender: TObject);
     procedure ProdutosporCategoria1Click(Sender: TObject);
     procedure VendasporData1Click(Sender: TObject);
+    procedure Usurios1Click(Sender: TObject);
+    procedure FormShow(Sender: TObject);
+    procedure AlterarSenha1Click(Sender: TObject);
   private
     teclaEnter: TMREnter;
     procedure AtualizacaoBancoDados(aForm: TfrmAtualizaDB);
@@ -51,6 +59,7 @@ type
 
 var
   frmPrincipal: TfrmPrincipal;
+  oUsuarioLogado: TUsuarioLogado;
 
 implementation
 
@@ -97,6 +106,8 @@ procedure TfrmPrincipal.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
   FreeAndNil(teclaEnter);
   FreeAndNil(dtmConexao);
+
+  if Assigned(oUsuarioLogado) then FreeAndNil(oUsuarioLogado);
 end;
 
 procedure TfrmPrincipal.FormCreate(Sender: TObject);
@@ -128,6 +139,18 @@ begin
   teclaEnter.FocusColor := clInfoBk;
 end;
 
+procedure TfrmPrincipal.FormShow(Sender: TObject);
+begin
+  try
+    oUsuarioLogado := TUsuarioLogado.Create;
+    frmLogin := TfrmLogin.Create(Self);
+    frmLogin.ShowModal;
+  finally
+    frmLogin.Release;
+    sbPrincipal.Panels[0].Text := 'Usuário: ' + oUsuarioLogado.nome;
+  end;
+end;
+
 procedure TfrmPrincipal.menuFecharClick(Sender: TObject);
 begin
   Application.Terminate;
@@ -154,6 +177,13 @@ begin
   frmRelProdutoPorCateg.Release;
 end;
 
+procedure TfrmPrincipal.Usurios1Click(Sender: TObject);
+begin
+  frmCadUsuario := TfrmCadUsuario.Create(Self);
+  frmCadUsuario.ShowModal;
+  frmCadUsuario.Release;
+end;
+
 procedure TfrmPrincipal.Vendas1Click(Sender: TObject);
 begin
   frmProVenda := TfrmProVenda.Create(Self);
@@ -177,6 +207,13 @@ begin
     frmSelecionarData.Release;
     frmRelVendaPorData.Release;
   End;
+end;
+
+procedure TfrmPrincipal.AlterarSenha1Click(Sender: TObject);
+begin
+  frmAlterarSenha := TfrmAlterarSenha.Create(Self);
+  frmAlterarSenha.ShowModal;
+  frmAlterarSenha.Release;
 end;
 
 procedure TfrmPrincipal.AtualizacaoBancoDados(aForm: TfrmAtualizaDB);
