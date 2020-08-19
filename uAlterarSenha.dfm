@@ -58,7 +58,7 @@ object frmAlterarSenha: TfrmAlterarSenha
   object lblUsuarioLogado: TLabel
     Left = 8
     Top = 1
-    Width = 430
+    Width = 433
     Height = 19
     Alignment = taCenter
     AutoSize = False

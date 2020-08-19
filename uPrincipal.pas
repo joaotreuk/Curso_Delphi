@@ -34,6 +34,8 @@ type
     AlterarSenha1: TMenuItem;
     N5: TMenuItem;
     sbPrincipal: TStatusBar;
+    AesdeAcesso1: TMenuItem;
+    UsuriosXAes1: TMenuItem;
     procedure menuFecharClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure Categorias1Click(Sender: TObject);
@@ -50,9 +52,12 @@ type
     procedure Usurios1Click(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure AlterarSenha1Click(Sender: TObject);
+    procedure AesdeAcesso1Click(Sender: TObject);
+    procedure UsuriosXAes1Click(Sender: TObject);
   private
     teclaEnter: TMREnter;
     procedure AtualizacaoBancoDados(aForm: TfrmAtualizaDB);
+    procedure CriarForm(nomeFormulario: TFormClass);
   public
     { Public declarations }
   end;
@@ -65,7 +70,9 @@ implementation
 
 {$R *.dfm}
 
-uses uCadCategorias, uCadCliente, uCadProduto, uProVendas;
+uses uCadCategorias, uCadCliente, uCadProduto, uProVendas, ZDbcIntfs,
+  cAtualizacaoBancoDeDados, cArquivoIni, uCadAcaoAcesso, cAcaoAcesso,
+  uUsuarioVsAcoes, uTelaHeranca;
 
 procedure TfrmPrincipal.Categoria1Click(Sender: TObject);
 begin
@@ -76,16 +83,12 @@ end;
 
 procedure TfrmPrincipal.Categorias1Click(Sender: TObject);
 begin
-  frmCadCategorias := TfrmCadCategorias.Create(Self);
-  frmCadCategorias.ShowModal;
-  frmCadCategorias.Release;
+  CriarForm(TfrmCadCategorias);
 end;
 
 procedure TfrmPrincipal.Clientes1Click(Sender: TObject);
 begin
-  frmCliente := TfrmCliente.Create(Self);
-  frmCliente.ShowModal;
-  frmCliente.Release;
+  CriarForm(TfrmCliente);
 end;
 
 procedure TfrmPrincipal.Clientes2Click(Sender: TObject);
@@ -112,6 +115,16 @@ end;
 
 procedure TfrmPrincipal.FormCreate(Sender: TObject);
 begin
+  if not FileExists(TArquivoIni.ArquivoIni) then
+  begin
+      TArquivoIni.AtualizarIni('SERVER', 'TipoBancoDeDados', 'MSSQL');
+      TArquivoIni.AtualizarIni('SERVER', 'NomeHost', 'DESKTOP-BLHGJR3');
+      TArquivoIni.AtualizarIni('SERVER', 'Porta', '1433');
+      TArquivoIni.AtualizarIni('SERVER', 'Usuario', 'Joao');
+      TArquivoIni.AtualizarIni('SERVER', 'Senha', '1234');
+      TArquivoIni.AtualizarIni('SERVER', 'BancoDeDados', 'Curso_Delphi');
+  end;
+
   frmAtualizaDB := TfrmAtualizaDB.Create(Self);
   frmAtualizaDB.Show;
   frmAtualizaDB.Refresh;
@@ -120,18 +133,41 @@ begin
 
   with dtmConexao.zcConexao do
   begin
+    Connected := False;
     SQLHourGlass := True;
-    Protocol := 'mssql';
+
+    if TArquivoIni.LerIni('SERVER', 'TipoBancoDeDados') = 'MSSQL' then
+      Protocol := 'mssql';
+
     LibraryLocation := 'D:\GitHub\Delphi\Curso_Delphi\ntwdblib.dll';
-    HostName := 'DESKTOP-BLHGJR3';
-    Port := 1433;
-    User := 'Joao';
-    Password := '1234';
-    Database := 'Curso_Delphi';
+    HostName := TArquivoIni.LerIni('SERVER', 'NomeHost');
+    Port := StrToInt(TArquivoIni.LerIni('SERVER', 'Porta'));
+    User := TArquivoIni.LerIni('SERVER', 'Usuario');
+    Password := TArquivoIni.LerIni('SERVER', 'Senha');
+    Database := TArquivoIni.LerIni('SERVER', 'BancoDeDados');
+    AutoCommit := True;
+    TransactIsolationLevel := tiReadCommitted;
     Connected := True;
   end;
 
   AtualizacaoBancoDados(frmAtualizaDB);
+
+  TAcaoAcesso.CriarAcoes(TfrmCadCategorias, dtmConexao.zcConexao);
+  TAcaoAcesso.CriarAcoes(TfrmCliente, dtmConexao.zcConexao);
+  TAcaoAcesso.CriarAcoes(TfrmCadProduto, dtmConexao.zcConexao);
+  TAcaoAcesso.CriarAcoes(TfrmCadUsuario, dtmConexao.zcConexao);
+  TAcaoAcesso.CriarAcoes(TfrmCadAcaoAcesso, dtmConexao.zcConexao);
+  TAcaoAcesso.CriarAcoes(TfrmAlterarSenha, dtmConexao.zcConexao);
+  TAcaoAcesso.CriarAcoes(TfrmProVenda, dtmConexao.zcConexao);
+  TAcaoAcesso.CriarAcoes(TfrmRelVendaPorData, dtmConexao.zcConexao);
+  TAcaoAcesso.CriarAcoes(TfrmRelFichaCliente, dtmConexao.zcConexao);
+  TAcaoAcesso.CriarAcoes(TfrmRelCliente, dtmConexao.zcConexao);
+  TAcaoAcesso.CriarAcoes(TfrmRelProdutoPorCateg, dtmConexao.zcConexao);
+  TAcaoAcesso.CriarAcoes(TfrmRelProduto, dtmConexao.zcConexao);
+  TAcaoAcesso.CriarAcoes(TfrmRelCategoria, dtmConexao.zcConexao);
+  TAcaoAcesso.CriarAcoes(TfrmUsuariosAcoes, dtmConexao.zcConexao);
+
+  TAcaoAcesso.PreencherUsuariosVsAcoes(dtmConexao.zcConexao);
   frmAtualizaDB.Free;
 
   teclaEnter := TMREnter.Create(Self);
@@ -158,9 +194,7 @@ end;
 
 procedure TfrmPrincipal.Produtos1Click(Sender: TObject);
 begin
-  frmCadProduto := TfrmCadProduto.Create(Self);
-  frmCadProduto.ShowModal;
-  frmCadProduto.Release;
+  CriarForm(TfrmCadProduto);
 end;
 
 procedure TfrmPrincipal.Produtos2Click(Sender: TObject);
@@ -179,16 +213,17 @@ end;
 
 procedure TfrmPrincipal.Usurios1Click(Sender: TObject);
 begin
-  frmCadUsuario := TfrmCadUsuario.Create(Self);
-  frmCadUsuario.ShowModal;
-  frmCadUsuario.Release;
+  CriarForm(TfrmCadUsuario);
+end;
+
+procedure TfrmPrincipal.UsuriosXAes1Click(Sender: TObject);
+begin
+  CriarForm(TfrmUsuariosAcoes);
 end;
 
 procedure TfrmPrincipal.Vendas1Click(Sender: TObject);
 begin
-  frmProVenda := TfrmProVenda.Create(Self);
-  frmProVenda.ShowModal;
-  frmProVenda.Release;
+  CriarForm(TfrmProVenda);
 end;
 
 procedure TfrmPrincipal.VendasporData1Click(Sender: TObject);
@@ -209,47 +244,47 @@ begin
   End;
 end;
 
+procedure TfrmPrincipal.AesdeAcesso1Click(Sender: TObject);
+begin
+  CriarForm(TfrmCadAcaoAcesso);
+end;
+
 procedure TfrmPrincipal.AlterarSenha1Click(Sender: TObject);
 begin
-  frmAlterarSenha := TfrmAlterarSenha.Create(Self);
-  frmAlterarSenha.ShowModal;
-  frmAlterarSenha.Release;
+  CriarForm(TfrmAlterarSenha);
 end;
 
 procedure TfrmPrincipal.AtualizacaoBancoDados(aForm: TfrmAtualizaDB);
+var oAtualizarMSSQL: TAtualizaBancoDadosMSSQL;
 begin
-  aForm.cbConexao.Checked := true;
-  aForm.Refresh;
+  try
+    oAtualizarMSSQL := TAtualizaBancoDadosMSSQL.Create(dtmConexao.zcConexao);
+    oAtualizarMSSQL.AtualizarBancoDeDadosMSSQL;
+  finally
+    if Assigned(oAtualizarMSSQL) then FreeAndNil(oAtualizarMSSQL);
+  end;
+end;
 
-  dtmConexao.qryScriptCategorias.ExecSQL;
-  aForm.cbCategorias.Checked := true;
-  aForm.Refresh;
-  Sleep(100);
+procedure TfrmPrincipal.CriarForm(nomeFormulario: TFormClass);
+var formulario: TForm;
+begin
+  try
+    formulario := nomeFormulario.Create(Application);
 
-  dtmConexao.qryScriptProdutos.ExecSQL;
-  aForm.cbProdutos.Checked := true;
-  aForm.Refresh;
-  Sleep(100);
-
-  dtmConexao.qryScriptClientes.ExecSQL;
-  aForm.cbClientes.Checked := true;
-  aForm.Refresh;
-  Sleep(100);
-
-  dtmConexao.qryScriptVendas.ExecSQL;
-  aForm.cbVendas.Checked := true;
-  aForm.Refresh;
-  Sleep(100);
-
-  dtmConexao.qryScriptItensVenda.ExecSQL;
-  aForm.cbItensVenda.Checked := true;
-  aForm.Refresh;
-  Sleep(100);
-
-  dtmConexao.qryScriptUsuarios.ExecSQL;
-  aForm.cbUsuarios.Checked := true;
-  aForm.Refresh;
-  Sleep(100);
+    if TfrmTelaHeranca.TenhoAcesso(oUsuarioLogado.codigo, formulario.Name, dtmConexao.zcConexao) then
+      formulario.ShowModal
+    else
+    begin
+      MessageDlg(
+        'Usuário: ' + oUsuarioLogado.nome + ', não possui permissão de acesso!',
+        mtWarning,
+        [mbOK],
+        0
+      );
+    end;
+  finally
+    if Assigned(formulario) then formulario.Release;
+  end;
 end;
 
 end.

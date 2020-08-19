@@ -1,0 +1,170 @@
+unit Categoria;
+
+interface
+
+uses
+  System.Classes, Vcl.Controls, Vcl.ExtCtrls, Vcl.Dialogs, ZAbstractConnection,
+  ZConnection, ZDataset, System.SysUtils;
+
+type
+  TCategoria = class
+  private
+    ConexaoDB: TZConnection;
+    F_id: Integer;
+    F_descricao: String;
+
+    function getCodigo: Integer;
+    function getDescricao: String;
+    procedure setCodigo(const Value: Integer);
+    procedure setDescricao(const Value: String);
+  public
+    constructor Create(AConexao: TZConnection);
+    function Inserir:Boolean;
+    function Atualizar:Boolean;
+    function Excluir:Boolean;
+    function Selecionar(id: Integer):Boolean;
+  published
+    property id: Integer read getCodigo write setCodigo;
+    property descricao: String read getDescricao write setDescricao;
+  end;
+
+implementation
+
+{ TCategoria }
+
+{$Region 'Constructor & Destructor'}
+
+constructor TCategoria.Create(AConexao: TZConnection);
+begin
+  ConexaoDB := AConexao;
+end;
+
+{$EndRegion}
+
+function TCategoria.Atualizar: Boolean;
+Var query: TZQuery;
+begin
+  Result := False;
+  query := TZQuery.Create(nil);
+
+  try
+    query.Connection := ConexaoDB;
+    query.SQL.Clear;
+
+    query.SQL.Add('UPDATE Categorias SET Descricao = :Descricao WHERE ID = :ID');
+    query.ParamByName('Descricao').AsString := Self.F_descricao;
+    query.ParamByName('ID').AsInteger := Self.F_id;
+    query.ExecSQL;
+
+    Result := True;
+    ShowMessage('Categoria atualizada com sucesso!');
+  finally
+    if Assigned(query) then FreeAndNil(query);
+  end;
+end;
+
+function TCategoria.Excluir(): Boolean;
+Var query: TZQuery;
+begin
+  Result := False;
+
+  if MessageDlg(
+    'Apagar o Registro: ' + #13 + #13 +
+    'Código: ' + IntToStr(F_id) + #13 +
+    'Descrição: ' + F_descricao,
+    mtConfirmation,
+    [mbYes, mbNo],
+    0
+  ) = mrNo then
+    Abort;
+
+  query := TZQuery.Create(nil);
+
+  try
+    query.Connection := ConexaoDB;
+    query.SQL.Clear;
+
+    query.SQL.Add('DELETE FROM Categorias WHERE ID = :ID');
+    query.ParamByName('ID').AsInteger := F_id;
+    query.ExecSQL;
+
+    Result := True;
+    ShowMessage('Categoria deletada com sucesso!');
+  finally
+    if Assigned(query) then FreeAndNil(query);
+  end;
+end;
+
+function TCategoria.Inserir: Boolean;
+Var query: TZQuery;
+begin
+  Result := False;
+  query := TZQuery.Create(nil);
+
+  try
+    query.Connection := ConexaoDB;
+    query.SQL.Clear;
+
+    query.SQL.Add('INSERT INTO Categorias (Descricao) VALUES (:Descricao)');
+    query.ParamByName('Descricao').AsString := Self.F_descricao;
+    query.ExecSQL;
+
+    Result := True;
+    ShowMessage('Categoria salva com sucesso!');
+  finally
+    if Assigned(query) then
+      FreeAndNil(query);
+  end;
+end;
+
+function TCategoria.Selecionar(id: Integer): Boolean;
+Var query: TZQuery;
+begin
+  Result := False;
+  query := TZQuery.Create(nil);
+
+  try
+    query.Connection := ConexaoDB;
+    query.SQL.Clear;
+
+    query.SQL.Add('SELECT Descricao FROM Categorias (NOLOCK)'
+      + ' WHERE ID = :ID');
+
+    query.ParamByName('ID').AsInteger := id;
+    query.Open;
+
+    Self.F_descricao := query.FieldByName('Descricao').AsString;
+    Self.F_id := id;
+
+    Result := True;
+  finally
+    if Assigned(query) then
+      FreeAndNil(query);
+  end;
+end;
+
+{$Region 'Gets & Sets'}
+
+function TCategoria.getCodigo: Integer;
+begin
+  Result := Self.F_id;
+end;
+
+function TCategoria.getDescricao: String;
+begin
+  Result := Self.F_descricao;
+end;
+
+procedure TCategoria.setCodigo(const Value: Integer);
+begin
+  Self.F_id := Value;
+end;
+
+procedure TCategoria.setDescricao(const Value: String);
+begin
+  Self.F_descricao := Value;
+end;
+
+{$EndRegion}
+
+end.

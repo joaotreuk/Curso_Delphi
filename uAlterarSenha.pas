@@ -57,7 +57,6 @@ begin
       MessageDlg('Senhas digitadas não coincidem,',mtinformation, [mbok], 0);
       edtSenhaNova.SetFocus;
     end;
-
   end
   else begin
     MessageDlg('Senha Atual está inválida!', mtinformation, [mbok], 0);

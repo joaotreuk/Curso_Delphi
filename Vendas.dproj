@@ -192,6 +192,19 @@
             <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="Models\mUsuarioLogado.pas"/>
+        <DCCReference Include="Models\cAtualizacaoBancoDeDados.pas"/>
+        <DCCReference Include="Models\cAtualizacaoTabelaMSSQL.pas"/>
+        <DCCReference Include="Models\cAtualizacaoCampoMSSQL.pas"/>
+        <DCCReference Include="Models\cArquivoIni.pas"/>
+        <DCCReference Include="Models\cAcaoAcesso.pas"/>
+        <DCCReference Include="Cadastros\uCadAcaoAcesso.pas">
+            <Form>frmCadAcaoAcesso</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="uUsuarioVsAcoes.pas">
+            <Form>frmUsuariosAcoes</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>

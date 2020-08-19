@@ -27,9 +27,6 @@ object frmPrincipal: TfrmPrincipal
       item
         Width = 150
       end>
-    ExplicitLeft = 400
-    ExplicitTop = 328
-    ExplicitWidth = 0
   end
   object mainPrincipal: TMainMenu
     Left = 56
@@ -57,6 +54,14 @@ object frmPrincipal: TfrmPrincipal
       object Usurios1: TMenuItem
         Caption = 'Usu'#225'rios'
         OnClick = Usurios1Click
+      end
+      object AesdeAcesso1: TMenuItem
+        Caption = 'A'#231#245'es de Acesso'
+        OnClick = AesdeAcesso1Click
+      end
+      object UsuriosXAes1: TMenuItem
+        Caption = 'Usu'#225'rios X A'#231#245'es'
+        OnClick = UsuriosXAes1Click
       end
       object AlterarSenha1: TMenuItem
         Caption = 'Alterar Senha'

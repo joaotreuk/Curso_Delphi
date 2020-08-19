@@ -59,8 +59,7 @@ begin
     Result := True;
     ShowMessage('Categoria atualizada com sucesso!');
   finally
-    if Assigned(query) then
-      FreeAndNil(query);
+    if Assigned(query) then FreeAndNil(query);
   end;
 end;
 
@@ -92,8 +91,7 @@ begin
     Result := True;
     ShowMessage('Categoria deletada com sucesso!');
   finally
-    if Assigned(query) then
-      FreeAndNil(query);
+    if Assigned(query) then FreeAndNil(query);
   end;
 end;
 
@@ -114,8 +112,7 @@ begin
     Result := True;
     ShowMessage('Categoria salva com sucesso!');
   finally
-    if Assigned(query) then
-      FreeAndNil(query);
+    if Assigned(query) then FreeAndNil(query);
   end;
 end;
 

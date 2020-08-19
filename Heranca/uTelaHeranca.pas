@@ -7,7 +7,7 @@ uses
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Data.DB, Vcl.Grids, Vcl.DBGrids,
   Vcl.StdCtrls, Vcl.Mask, Vcl.ComCtrls, Vcl.ExtCtrls, Vcl.DBCtrls,
   ZAbstractRODataset, ZAbstractDataset, ZDataset, uDTMConexao, uEnum,
-  RxToolEdit, RxCurrEdit;
+  RxToolEdit, RxCurrEdit, ZConnection;
 
 type
   TfrmTelaHeranca = class(TForm)
@@ -58,6 +58,7 @@ type
     function Excluir:Boolean; virtual;
     function Salvar(EstadoDoCadastro:TEstadoDoCadastro):Boolean; virtual;
     procedure BloquearCTRL_DEL_DBGrid(var Key: Word; Shift: TShiftState);
+    class function TenhoAcesso(idUsuario: Integer; chave: String; conexao: TZConnection): Boolean; static;
   end;
 
 var
@@ -66,6 +67,8 @@ var
 implementation
 
 {$R *.dfm}
+
+uses uPrincipal;
 
 {$Region 'Observações'}{
 
@@ -196,6 +199,35 @@ begin
   Result := True;
 end;
 
+class function TfrmTelaHeranca.TenhoAcesso(idUsuario: Integer; chave: String;
+  conexao: TZConnection): Boolean;
+var query: TZQuery;
+begin
+  try
+    Result := True;
+    query := TZQuery.Create(nil);
+    query.Connection := dtmConexao.zcConexao;
+    query.SQL.Clear;
+
+    query.SQL.Add(
+      'SELECT ativo FROM usuariosAcaoAcesso WITH (NOLOCK)' +
+      'WHERE usuarioId = :IDUsuario ' +
+      'AND acaoAcessoId = (' +
+      '	SELECT TOP 1 acaoAcessoId FROM acaoAcesso WITH (NOLOCK)' +
+      '	WHERE chave = :Chave' +
+      ')'
+    );
+
+    query.ParamByName('IDUsuario').AsInteger := idUsuario;
+    query.ParamByName('Chave').AsString := chave;
+    query.Open;
+
+    Result := query.FieldByName('ativo').AsBoolean;
+  finally
+    if Assigned(query) then FreeAndNil(query);
+  end;
+end;
+
 function TfrmTelaHeranca.Excluir: Boolean;
 begin
   ShowMessage('Deletado!');
@@ -206,6 +238,22 @@ end;
 
 procedure TfrmTelaHeranca.btnAlterarClick(Sender: TObject);
 begin
+  if not TenhoAcesso(
+    oUsuarioLogado.codigo,
+    Self.Name + '_' + TButton(Sender).Name,
+    dtmConexao.zcConexao
+  ) then
+  begin
+    MessageDlg(
+      'Usuário: ' + oUsuarioLogado.nome + ', não possui permissão de acesso!',
+      mtWarning,
+      [mbOK],
+      0
+    );
+
+    Abort;
+  end;
+
   ControlarBotoes(
     btnNovo, btnAlterar, btnCancelar, btnSalvar, btnDeletar, dbnNavegador, pgcPrincipal, false
   );
@@ -224,8 +272,23 @@ end;
 
 procedure TfrmTelaHeranca.btnDeletarClick(Sender: TObject);
 begin
-  if Excluir then
-    qryListagem.Refresh;
+  if not TenhoAcesso(
+    oUsuarioLogado.codigo,
+    Self.Name + '_' + TButton(Sender).Name,
+    dtmConexao.zcConexao
+  ) then
+  begin
+    MessageDlg(
+      'Usuário: ' + oUsuarioLogado.nome + ', não possui permissão de acesso!',
+      mtWarning,
+      [mbOK],
+      0
+    );
+
+    Abort;
+  end;
+
+  if Excluir then qryListagem.Refresh;
 end;
 
 procedure TfrmTelaHeranca.btnFecharClick(Sender: TObject);
@@ -235,6 +298,22 @@ end;
 
 procedure TfrmTelaHeranca.btnNovoClick(Sender: TObject);
 begin
+  if not TenhoAcesso(
+    oUsuarioLogado.codigo,
+    Self.Name + '_' + TButton(Sender).Name,
+    dtmConexao.zcConexao
+  ) then
+  begin
+    MessageDlg(
+      'Usuário: ' + oUsuarioLogado.nome + ', não possui permissão de acesso!',
+      mtWarning,
+      [mbOK],
+      0
+    );
+
+    Abort;
+  end;
+
   LimparCampos;
 
   ControlarBotoes(

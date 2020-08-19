@@ -11,15 +11,7 @@ type
   TfrmAtualizaDB = class(TForm)
     Panel1: TPanel;
     Panel2: TPanel;
-    Image1: TImage;
     Label1: TLabel;
-    cbConexao: TCheckBox;
-    cbCategorias: TCheckBox;
-    cbProdutos: TCheckBox;
-    cbClientes: TCheckBox;
-    cbVendas: TCheckBox;
-    cbItensVenda: TCheckBox;
-    cbUsuarios: TCheckBox;
   private
     { Private declarations }
   public

@@ -9,12 +9,6 @@ uses
 type
   TdtmConexao = class(TDataModule)
     zcConexao: TZConnection;
-    qryScriptCategorias: TZQuery;
-    qryScriptProdutos: TZQuery;
-    qryScriptClientes: TZQuery;
-    qryScriptVendas: TZQuery;
-    qryScriptItensVenda: TZQuery;
-    qryScriptUsuarios: TZQuery;
   private
     { Private declarations }
   public

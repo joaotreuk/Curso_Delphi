@@ -37,6 +37,8 @@ implementation
 
 {$R *.dfm}
 
+uses cAcaoAcesso;
+
 { TfrmCadUsuario }
 
 function TfrmCadUsuario.Excluir: Boolean;
@@ -106,7 +108,7 @@ begin
   else if EstadoDoCadastro = ecAlterar then
      Result := oUsuario.Atualizar;
 
-  //TAcaoAcesso.PreencherUsuariosVsAcoes(DtmPrincipal.ConexaoDB);
+  TAcaoAcesso.PreencherUsuariosVsAcoes(dtmConexao.zcConexao);
 end;
 
 end.

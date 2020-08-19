@@ -1,0 +1,125 @@
+unit uUsuarioVsAcoes;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Data.DB, Vcl.Grids,
+  Vcl.DBGrids, ZAbstractRODataset, ZAbstractDataset, ZDataset, uDTMConexao,
+  Vcl.StdCtrls;
+
+type
+  TfrmUsuariosAcoes = class(TForm)
+    Panel1: TPanel;
+    Panel2: TPanel;
+    Panel3: TPanel;
+    sSeparador: TSplitter;
+    gUsuarios: TDBGrid;
+    gAcoes: TDBGrid;
+    qryUsuarios: TZQuery;
+    qryAcoes: TZQuery;
+    dsUsuarios: TDataSource;
+    dsAcoes: TDataSource;
+    qryUsuariosID: TIntegerField;
+    qryUsuariosNome: TWideStringField;
+    qryAcoesusuarioId: TIntegerField;
+    qryAcoesacaoAcessoId: TIntegerField;
+    qryAcoesdescricao: TWideStringField;
+    qryAcoesativo: TBooleanField;
+    btnFechar: TButton;
+    procedure btnFecharClick(Sender: TObject);
+    procedure qryUsuariosAfterScroll(DataSet: TDataSet);
+    procedure FormShow(Sender: TObject);
+    procedure gAcoesDblClick(Sender: TObject);
+    procedure gAcoesDrawColumnCell(Sender: TObject; const Rect: TRect;
+      DataCol: Integer; Column: TColumn; State: TGridDrawState);
+  private
+    { Private declarations }
+    procedure SelecionarAcoesPorUsuario;
+  public
+    { Public declarations }
+  end;
+
+var
+  frmUsuariosAcoes: TfrmUsuariosAcoes;
+
+implementation
+
+{$R *.dfm}
+
+procedure TfrmUsuariosAcoes.btnFecharClick(Sender: TObject);
+begin
+  Close;
+end;
+
+procedure TfrmUsuariosAcoes.gAcoesDblClick(Sender: TObject);
+var Qry: TZQuery;
+  bmRegistroAtual: TBookmark;
+begin
+  try
+    bmRegistroAtual := QryAcoes.GetBookMark; //Marcar o Registro Selecionado
+    Qry := TZQuery.Create(nil);
+    Qry.Connection := dtmConexao.zcConexao;
+    Qry.SQL.Clear;
+
+    Qry.SQL.Add(
+      'UPDATE usuariosAcaoAcesso SET ativo = :ativo ' +
+      'WHERE usuarioId = :usuarioId ' +
+      'AND acaoAcessoId = :acaoAcessoId'
+    );
+
+    Qry.ParamByName('usuarioId').AsInteger := QryAcoes.FieldByName('usuarioId').AsInteger;
+    Qry.ParamByName('acaoAcessoId').AsInteger := QryAcoes.FieldByName('acaoAcessoId').AsInteger;
+    Qry.ParamByName('ativo').AsBoolean := not QryAcoes.FieldByName('ativo').AsBoolean;
+
+    Try
+      dtmConexao.zcConexao.StartTransaction;
+      Qry.ExecSQL;
+      dtmConexao.zcConexao.Commit;
+    Except
+      dtmConexao.zcConexao.Rollback;
+    End;
+
+  finally
+    SelecionarAcoesPorUsuario;
+    QryAcoes.GotoBookMark(bmRegistroAtual);  //Faz o Retorno do Registro depois que a query foi fechada e aberta
+    if Assigned(Qry) then FreeAndNil(Qry);
+  end;
+end;
+
+procedure TfrmUsuariosAcoes.gAcoesDrawColumnCell(Sender: TObject;
+  const Rect: TRect; DataCol: Integer; Column: TColumn; State: TGridDrawState);
+begin
+  if not QryAcoes.FieldByName('ativo').AsBoolean then
+  begin
+    TDBGrid(Sender).Canvas.Font.Color := clWhite;
+    TDBGrid(Sender).Canvas.Brush.Color := clRed;
+  end;
+
+  TDBGrid(Sender).DefaultDrawDataCell(Rect, TDBGrid(Sender).columns[datacol].field, State);
+end;
+
+procedure TfrmUsuariosAcoes.FormShow(Sender: TObject);
+begin
+  try
+    qryUsuarios.DisableControls;
+    qryUsuarios.Open;
+    SelecionarAcoesPorUsuario;
+  finally
+    qryUsuarios.EnableControls;
+  end;
+end;
+
+procedure TfrmUsuariosAcoes.qryUsuariosAfterScroll(DataSet: TDataSet);
+begin
+  SelecionarAcoesPorUsuario;
+end;
+
+procedure TfrmUsuariosAcoes.SelecionarAcoesPorUsuario;
+begin
+  qryAcoes.Close;
+  qryAcoes.ParamByName('IDUsuario').AsInteger := qryUsuarios.FieldByName('ID').AsInteger;
+  qryAcoes.Open;
+end;
+
+end.
