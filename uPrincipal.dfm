@@ -28,9 +28,71 @@ object frmPrincipal: TfrmPrincipal
         Width = 150
       end>
   end
+  object Panel3: TPanel
+    Left = 0
+    Top = 0
+    Width = 409
+    Height = 596
+    Align = alLeft
+    TabOrder = 1
+    object Panel5: TPanel
+      Left = 1
+      Top = 1
+      Width = 407
+      Height = 280
+      Align = alTop
+      TabOrder = 0
+      ExplicitLeft = 2
+      ExplicitTop = 9
+    end
+    object Panel6: TPanel
+      Left = 1
+      Top = 281
+      Width = 407
+      Height = 314
+      Align = alClient
+      Caption = 'Panel4'
+      TabOrder = 1
+      ExplicitLeft = 2
+      ExplicitTop = 282
+    end
+  end
+  object Panel1: TPanel
+    Left = 409
+    Top = 0
+    Width = 454
+    Height = 596
+    Align = alClient
+    TabOrder = 2
+    ExplicitLeft = 560
+    ExplicitTop = 200
+    ExplicitWidth = 185
+    ExplicitHeight = 41
+    object Panel2: TPanel
+      Left = 1
+      Top = 1
+      Width = 452
+      Height = 280
+      Align = alTop
+      TabOrder = 0
+    end
+    object Panel4: TPanel
+      Left = 1
+      Top = 281
+      Width = 452
+      Height = 314
+      Align = alClient
+      Caption = 'Panel4'
+      TabOrder = 1
+      ExplicitLeft = 168
+      ExplicitTop = 392
+      ExplicitWidth = 185
+      ExplicitHeight = 41
+    end
+  end
   object mainPrincipal: TMainMenu
-    Left = 56
-    Top = 40
+    Left = 264
+    Top = 16
     object Cadastros1: TMenuItem
       Caption = 'Cadastros'
       object Clientes1: TMenuItem

@@ -38,7 +38,8 @@ uses
   cArquivoIni in 'Models\cArquivoIni.pas',
   cAcaoAcesso in 'Models\cAcaoAcesso.pas',
   uCadAcaoAcesso in 'Cadastros\uCadAcaoAcesso.pas' {frmCadAcaoAcesso},
-  uUsuarioVsAcoes in 'uUsuarioVsAcoes.pas' {frmUsuariosAcoes};
+  uUsuarioVsAcoes in 'uUsuarioVsAcoes.pas' {frmUsuariosAcoes},
+  uDTMGraficos in 'DataModule\uDTMGraficos.pas' {DataModule1: TDataModule};
 
 {$R *.res}
 
@@ -46,5 +47,6 @@ begin
   Application.Initialize;
   Application.MainFormOnTaskbar := True;
   Application.CreateForm(TfrmPrincipal, frmPrincipal);
+  Application.CreateForm(TDataModule1, DataModule1);
   Application.Run;
 end.

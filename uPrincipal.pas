@@ -7,7 +7,8 @@ uses
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.Menus, uDTMConexao, Enter, uFrmAtualizaDB,
   uRelCategoria, uRelCliente, uRelFichaCliente, uRelProduto,
   uRelProdutoPorCategoria, uSelecionarData, uRelVendaPorData, uCadUsuario,
-  uLogin, uAlterarSenha, mUsuarioLogado, Vcl.ComCtrls;
+  uLogin, uAlterarSenha, mUsuarioLogado, Vcl.ComCtrls, Data.DB,
+  ZAbstractRODataset, ZAbstractDataset, ZDataset, Vcl.ExtCtrls, uDTMGraficos;
 
 type
   TfrmPrincipal = class(TForm)
@@ -36,6 +37,12 @@ type
     sbPrincipal: TStatusBar;
     AesdeAcesso1: TMenuItem;
     UsuriosXAes1: TMenuItem;
+    Panel3: TPanel;
+    Panel1: TPanel;
+    Panel2: TPanel;
+    Panel4: TPanel;
+    Panel5: TPanel;
+    Panel6: TPanel;
     procedure menuFecharClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure Categorias1Click(Sender: TObject);
